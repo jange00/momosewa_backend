@@ -11,7 +11,58 @@ export const register = async (req, res) => {
   try {
     const { name, email, phone, password, role = 'Customer' } = req.body;
 
-    // Check if user already exists
+    // If vendor registration, only create VendorApplication (NO User account yet)
+    if (role === 'Vendor') {
+      const { businessName, businessAddress, businessLicense, storeName } = req.body;
+
+      if (!businessName || !businessAddress || !businessLicense || !storeName) {
+        return sendError(res, 400, 'Vendor registration requires business details');
+      }
+
+      // Check if user or application already exists
+      const existingUser = await User.findOne({
+        $or: [{ email: email.toLowerCase() }, { phone }],
+      });
+
+      if (existingUser) {
+        return sendError(res, 400, 'User with this email or phone already exists');
+      }
+
+      // Check if application already exists
+      const existingApplication = await VendorApplication.findOne({
+        $or: [{ email: email.toLowerCase() }, { phone }],
+      });
+
+      if (existingApplication) {
+        return sendError(res, 400, 'Vendor application with this email or phone already exists');
+      }
+
+      // Create vendor application only (NO User account created until admin approval)
+      const application = await VendorApplication.create({
+        name,
+        email: email.toLowerCase(),
+        phone,
+        password, // Will be hashed by pre-save hook
+        businessName,
+        businessAddress,
+        businessLicense,
+        storeName,
+        status: 'pending',
+      });
+
+      return sendSuccess(res, {
+        data: {
+          application: {
+            _id: application._id,
+            email: application.email,
+            status: application.status,
+          },
+        },
+        message: 'Vendor application submitted successfully. Please wait for admin approval before you can login.',
+      });
+    }
+
+    // For non-vendor registration, create user account immediately
     const existingUser = await User.findOne({
       $or: [{ email: email.toLowerCase() }, { phone }],
     });
@@ -20,38 +71,23 @@ export const register = async (req, res) => {
       return sendError(res, 400, 'User with this email or phone already exists');
     }
 
-    // If vendor registration, create user as Customer first (role changes to Vendor after approval)
-    const userRole = role === 'Vendor' ? 'Customer' : role;
-    
+    // Check if there's a pending vendor application with this email/phone
+    const existingApplication = await VendorApplication.findOne({
+      $or: [{ email: email.toLowerCase() }, { phone }],
+    });
+
+    if (existingApplication) {
+      return sendError(res, 400, 'An application with this email or phone already exists');
+    }
+
     // Create user
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       phone,
       password,
-      role: userRole,
+      role,
     });
-
-    // If vendor, create vendor application (NOT vendor document yet)
-    if (role === 'Vendor') {
-      const { businessName, businessAddress, businessLicense, storeName } = req.body;
-
-      if (!businessName || !businessAddress || !businessLicense || !storeName) {
-        // Delete user if vendor registration is incomplete
-        await User.findByIdAndDelete(user._id);
-        return sendError(res, 400, 'Vendor registration requires business details');
-      }
-
-      // Store application data temporarily - Vendor document will be created only after admin approval
-      await VendorApplication.create({
-        userId: user._id,
-        businessName,
-        businessAddress,
-        businessLicense,
-        storeName,
-        status: 'pending',
-      });
-    }
 
     // Generate tokens
     const tokenPayload = {

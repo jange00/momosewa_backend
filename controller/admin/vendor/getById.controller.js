@@ -18,7 +18,8 @@ export const getVendorDetails = async (req, res) => {
 
     // If not found, try as application
     const application = await VendorApplication.findById(req.params.id)
-      .populate('userId', 'name email phone profilePicture')
+      .select('-password') // Don't send password
+      .populate('userId', 'name email phone profilePicture') // userId may be null for pending apps
       .populate('reviewedBy', 'name email');
 
     if (!application) {

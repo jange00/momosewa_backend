@@ -60,7 +60,22 @@
 }
 ```
 
-**Response:**
+**Response (Vendor Registration - DIFFERENT from Customer):**
+```json
+{
+  "success": true,
+  "data": {
+    "application": {
+      "_id": "application_id",
+      "email": "vendor@example.com",
+      "status": "pending"
+    }
+  },
+  "message": "Vendor application submitted successfully. Please wait for admin approval before you can login."
+}
+```
+
+**Response (Customer Registration - Normal):**
 ```json
 {
   "success": true,
@@ -83,12 +98,17 @@
 }
 ```
 
+**⚠️ CRITICAL FRONTEND CHANGES REQUIRED:**
+
 **Important Notes:**
-- Vendor registration creates user as `Customer` initially (not `Vendor`)
-- Creates a `VendorApplication` document (not `Vendor` document)
-- `Vendor` document is created **ONLY** after admin approval
-- User role changes to `Vendor` only after admin approval
-- Before approval, user can check application status but cannot access vendor features
+- ⚠️ **Vendor registration does NOT create a User account immediately**
+- ⚠️ **Vendor registration does NOT return tokens** - users cannot login until approved
+- ⚠️ **Response structure is different** - returns `application` object instead of `user` + tokens
+- Creates a `VendorApplication` document only (no User account yet)
+- `User` account and `Vendor` document are created **ONLY** after admin approval
+- Vendor cannot login until admin approves the application
+- After approval, vendor can login with their email/phone and password
+- Before approval, vendor cannot check status (no account exists to authenticate with)
 
 ---
 
@@ -1227,20 +1247,32 @@ OR
     "applications": [
       {
         "_id": "application_id",
-        "userId": { /* user object */ },
+        "name": "Vendor Name",
+        "email": "vendor@example.com",
+        "phone": "1234567890",
         "businessName": "My Business",
         "businessAddress": "123 Business St",
         "businessLicense": "LIC123456",
         "storeName": "My Store",
         "status": "pending",
-        "applicationDate": "2024-01-01T00:00:00.000Z"
+        "applicationDate": "2024-01-01T00:00:00.000Z",
+        "userId": null,
+        "reviewedBy": null,
+        "reviewedDate": null,
+        "rejectedReason": null,
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z"
       }
     ]
   }
 }
 ```
 
-**Note:** Returns `VendorApplication` documents (not Vendor documents). These are pending applications waiting for approval.
+**Important Notes:**
+- Returns `VendorApplication` documents (not Vendor documents). These are pending applications waiting for approval.
+- `userId` will be `null` for pending applications (user account is created only after approval)
+- User information (name, email, phone) is stored directly in the application document
+- Password field is excluded from the response for security
 
 ---
 

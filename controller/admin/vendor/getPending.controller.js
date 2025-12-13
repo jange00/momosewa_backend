@@ -6,8 +6,10 @@ import { sendSuccess, sendError } from '../../../utils/response.js';
  */
 export const getPendingVendors = async (req, res) => {
   try {
+    // Applications now store name, email, phone directly (no need to populate userId)
     const applications = await VendorApplication.find({ status: 'pending' })
-      .populate('userId', 'name email phone')
+      .select('-password') // Don't send password to admin
+      .populate('reviewedBy', 'name email') // Populate reviewer if exists
       .sort({ applicationDate: -1 });
 
     return sendSuccess(res, { data: { applications } });

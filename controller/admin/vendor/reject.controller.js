@@ -28,14 +28,17 @@ export const rejectVendor = async (req, res) => {
     application.rejectedReason = reason;
     await application.save();
 
-    // Emit notification
-    try {
-      const io = getIO();
-      emitVendorApproval(io, application.userId.toString(), 'rejected', { applicationId: application._id, reason });
-      await createVendorApprovalNotification(application.userId, 'rejected', application._id, reason);
-      await emitNotificationCount(io, application.userId.toString());
-    } catch (error) {
-      console.error('Error emitting vendor rejection notification:', error);
+    // Emit notification only if user account exists (userId is set)
+    // If no userId, the application was rejected before approval, so no user account exists yet
+    if (application.userId) {
+      try {
+        const io = getIO();
+        emitVendorApproval(io, application.userId.toString(), 'rejected', { applicationId: application._id, reason });
+        await createVendorApprovalNotification(application.userId, 'rejected', application._id, reason);
+        await emitNotificationCount(io, application.userId.toString());
+      } catch (error) {
+        console.error('Error emitting vendor rejection notification:', error);
+      }
     }
 
     return sendSuccess(res, {

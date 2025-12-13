@@ -1,4 +1,5 @@
 import { Vendor } from '../../models/vendor.js';
+import { VendorApplication } from '../../models/vendorApplication.js';
 import { User } from '../../models/user.js';
 import { Order } from '../../models/order.js';
 import { Product } from '../../models/product.js';
@@ -21,7 +22,7 @@ export const getDashboardStats = async (req, res) => {
       User.countDocuments(),
       Vendor.countDocuments(),
       Vendor.countDocuments({ status: 'active' }),
-      Vendor.countDocuments({ status: 'pending' }),
+      VendorApplication.countDocuments({ status: 'pending' }), // Fixed: Count from VendorApplication, not Vendor
       Order.countDocuments(),
       Order.aggregate([
         { $match: { paymentStatus: 'paid' } },
