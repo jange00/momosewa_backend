@@ -15,25 +15,27 @@ const router = express.Router();
 router.use(authenticate);
 
 router.get('/profile', getProfile);
-router.put(
-  '/profile',
-  [
-    body('name').optional().trim().notEmpty(),
-    body('phone').optional().trim().notEmpty(),
-  ],
-  validate,
-  updateProfile
-);
-router.put(
-  '/password',
-  [
-    body('currentPassword').notEmpty().withMessage('Current password is required'),
-    body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters'),
-  ],
-  validate,
-  changePassword
-);
+
+// Update profile - support both PUT and PATCH
+const updateProfileValidation = [
+  body('name').optional().trim().notEmpty(),
+  body('phone').optional().trim().notEmpty(),
+];
+router.put('/profile', updateProfileValidation, validate, updateProfile);
+router.patch('/profile', updateProfileValidation, validate, updateProfile);
+
+// Change password - support both PUT and PATCH
+const changePasswordValidation = [
+  body('currentPassword').notEmpty().withMessage('Current password is required'),
+  body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters'),
+];
+router.put('/password', changePasswordValidation, validate, changePassword);
+router.patch('/password', changePasswordValidation, validate, changePassword);
+
+// Profile picture routes - support both POST and PATCH
 router.post('/profile-picture', upload.single('image'), uploadProfilePicture);
+router.patch('/profile/picture', upload.single('image'), uploadProfilePicture);
 router.delete('/profile-picture', deleteProfilePicture);
+router.delete('/profile/picture', deleteProfilePicture);
 
 export default router;
