@@ -2,9 +2,7 @@ import { Product } from '../../models/product.js';
 import { Vendor } from '../../models/vendor.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Update product (Vendor owner only)
- */
+// Update product (Vendor owner only)
 export const updateProduct = async (req, res) => {
   try {
     const vendor = await Vendor.findOne({ userId: req.user._id });

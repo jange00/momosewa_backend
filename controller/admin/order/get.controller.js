@@ -1,9 +1,7 @@
 import { Order } from '../../../models/order.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Get all orders (admin)
- */
+// Get all orders (admin)
 export const getAllOrders = async (req, res) => {
   try {
     const { status, paymentStatus, page = 1, limit = 20 } = req.query;

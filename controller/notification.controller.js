@@ -1,9 +1,7 @@
 import { Notification } from '../models/notification.js';
 import { sendSuccess, sendError } from '../utils/response.js';
 
-/**
- * Get user's notifications
- */
+// Get user's notifications
 export const getNotifications = async (req, res) => {
   try {
     const { isRead, page = 1, limit = 20 } = req.query;
@@ -38,9 +36,7 @@ export const getNotifications = async (req, res) => {
   }
 };
 
-/**
- * Get unread notification count
- */
+// Get unread notification count
 export const getUnreadCount = async (req, res) => {
   try {
     const count = await Notification.countDocuments({
@@ -54,9 +50,7 @@ export const getUnreadCount = async (req, res) => {
   }
 };
 
-/**
- * Mark notification as read
- */
+// Mark notification as read
 export const markAsRead = async (req, res) => {
   try {
     const notification = await Notification.findById(req.params.id);
@@ -81,9 +75,7 @@ export const markAsRead = async (req, res) => {
   }
 };
 
-/**
- * Mark all as read
- */
+// Mark all as read
 export const markAllAsRead = async (req, res) => {
   try {
     await Notification.updateMany(
@@ -97,9 +89,7 @@ export const markAllAsRead = async (req, res) => {
   }
 };
 
-/**
- * Delete notification
- */
+// Delete notification
 export const deleteNotification = async (req, res) => {
   try {
     const notification = await Notification.findById(req.params.id);

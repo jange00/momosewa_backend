@@ -1,10 +1,9 @@
 import { sendSuccess, sendError } from '../../utils/response.js';
 import { getAreasByCity as getCityAreas } from '../../utils/cityAreas.js';
 
-/**
- * Get areas for a specific city
- * GET /addresses/areas/:city
- */
+// Get areas for a specific city
+// GET /addresses/areas/:city
+ 
 export const getAreasByCity = async (req, res) => {
   try {
     const { city } = req.params;
@@ -38,4 +37,9 @@ export const getAreasByCity = async (req, res) => {
     return sendError(res, 500, 'Failed to fetch areas', error.message);
   }
 };
+
+
+
+
+
 

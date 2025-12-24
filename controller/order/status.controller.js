@@ -5,9 +5,7 @@ import { emitOrderUpdate } from '../../services/notificationSocket.js';
 import { getIO } from '../../services/socket.service.js';
 import { createOrderNotification } from '../../services/notification.service.js';
 
-/**
- * Update order status (Vendor/Admin)
- */
+// Update order status (Vendor/Admin)
 export const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;

@@ -1,9 +1,7 @@
 import { Order } from '../../models/order.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Track order status
- */
+// Track order status
 export const trackOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)

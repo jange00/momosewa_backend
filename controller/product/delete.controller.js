@@ -2,9 +2,7 @@ import { Product } from '../../models/product.js';
 import { Vendor } from '../../models/vendor.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Delete product (Vendor owner only)
- */
+// Delete product (Vendor owner only)
 export const deleteProduct = async (req, res) => {
   try {
     const vendor = await Vendor.findOne({ userId: req.user._id });

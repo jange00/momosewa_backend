@@ -4,9 +4,7 @@ import { emitVendorApproval, emitNotificationCount } from '../../../services/not
 import { getIO } from '../../../services/socket.service.js';
 import { createVendorApprovalNotification } from '../../../services/notification.service.js';
 
-/**
- * Reject vendor application
- */
+// Reject vendor application
 export const rejectVendor = async (req, res) => {
   try {
     const { reason } = req.body;

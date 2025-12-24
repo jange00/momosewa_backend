@@ -2,9 +2,7 @@ import { Vendor } from '../../../models/vendor.js';
 import { VendorApplication } from '../../../models/vendorApplication.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Get vendor approval status
- */
+// Get vendor approval status
 export const getApprovalStatus = async (req, res) => {
   try {
     // Check if vendor is already approved (has Vendor document)

@@ -4,9 +4,7 @@ import { User } from '../models/user.js';
 import { Vendor } from '../models/vendor.js';
 import { sendError } from '../utils/response.js';
 
-/**
- * Authenticate user via JWT token
- */
+// Authenticate user via JWT token
 export const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -38,9 +36,7 @@ export const authenticate = async (req, res, next) => {
   }
 };
 
-/**
- * Authorize user by role
- */
+// Authorize user by role
 export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {
@@ -55,33 +51,25 @@ export const authorize = (...roles) => {
   };
 };
 
-/**
- * Vendor only access
- */
+// Vendor only access
 export const vendorOnly = [
   authenticate,
   authorize('Vendor'),
 ];
 
-/**
- * Admin only access
- */
+// Admin only access
 export const adminOnly = [
   authenticate,
   authorize('Admin'),
 ];
 
-/**
- * Customer only access
- */
+// Customer only access
 export const customerOnly = [
   authenticate,
   authorize('Customer'),
 ];
 
-/**
- * Check if vendor is active and approved
- */
+// Check if vendor is active and approved
 export const vendorActive = async (req, res, next) => {
   try {
     if (req.user.role !== 'Vendor') {
@@ -105,10 +93,8 @@ export const vendorActive = async (req, res, next) => {
   }
 };
 
-/**
- * Check if vendor owns the resource
- * Allows access for users with vendor application (pending, active, or rejected)
- */
+// Check if vendor owns the resource
+// Allows access for users with vendor application (pending, active, or rejected)
 export const vendorOwner = async (req, res, next) => {
   try {
     const vendor = await Vendor.findOne({ userId: req.user._id });

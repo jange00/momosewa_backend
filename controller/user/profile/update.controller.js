@@ -1,9 +1,7 @@
 import { User } from '../../../models/user.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Update user profile
- */
+// Update user profile
 export const updateProfile = async (req, res) => {
   try {
     const { name, phone } = req.body;

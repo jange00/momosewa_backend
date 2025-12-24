@@ -2,9 +2,7 @@ import { Vendor } from '../../../models/vendor.js';
 import { VendorApplication } from '../../../models/vendorApplication.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Get vendor details (can be application or approved vendor)
- */
+// Get vendor details (can be application or approved vendor)
 export const getVendorDetails = async (req, res) => {
   try {
     // First try to find as approved vendor

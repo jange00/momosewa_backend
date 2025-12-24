@@ -5,9 +5,7 @@ import { Vendor } from '../models/vendor.js';
 import { sendSuccess, sendError } from '../utils/response.js';
 import { uploadMultipleToCloudinary } from '../middlewares/upload.middleware.js';
 
-/**
- * Create review (Customer, after order delivered)
- */
+// Create review (Customer, after order delivered)
 export const createReview = async (req, res) => {
   try {
     const { orderId, productId, rating, comment } = req.body;
@@ -66,9 +64,7 @@ export const createReview = async (req, res) => {
   }
 };
 
-/**
- * Get reviews (with filters)
- */
+// Get reviews (with filters)
 export const getReviews = async (req, res) => {
   try {
     const { product, vendor, customer, page = 1, limit = 20 } = req.query;
@@ -105,9 +101,7 @@ export const getReviews = async (req, res) => {
   }
 };
 
-/**
- * Get review details
- */
+// Get review details
 export const getReviewById = async (req, res) => {
   try {
     const review = await Review.findById(req.params.id)
@@ -125,9 +119,7 @@ export const getReviewById = async (req, res) => {
   }
 };
 
-/**
- * Update review (Owner only)
- */
+// Update review (Owner only)
 export const updateReview = async (req, res) => {
   try {
     const review = await Review.findById(req.params.id);
@@ -161,9 +153,7 @@ export const updateReview = async (req, res) => {
   }
 };
 
-/**
- * Delete review (Owner/Admin)
- */
+// Delete review (Owner/Admin)
 export const deleteReview = async (req, res) => {
   try {
     const review = await Review.findById(req.params.id);

@@ -2,9 +2,7 @@ import { User } from '../../../models/user.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 import { deleteFromCloudinary } from '../../../middlewares/upload.middleware.js';
 
-/**
- * Delete profile picture
- */
+// Delete profile picture
 export const deleteProfilePicture = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);

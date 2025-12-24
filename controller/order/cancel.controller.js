@@ -1,9 +1,7 @@
 import { Order } from '../../models/order.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Cancel order
- */
+// Cancel order
 export const cancelOrder = async (req, res) => {
   try {
     const { reason } = req.body;

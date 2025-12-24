@@ -4,9 +4,7 @@ import { sendSuccess, sendError } from '../utils/response.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
 import { emitNotification } from '../services/notificationSocket.js';
 
-/**
- * Register new user
- */
+// Register new user
 export const register = async (req, res) => {
   try {
     const { name, email, phone, password, role = 'Customer' } = req.body;
@@ -121,9 +119,7 @@ export const register = async (req, res) => {
   }
 };
 
-/**
- * Login user
- */
+// Login user
 export const login = async (req, res) => {
   try {
     const { email, phone, password } = req.body;
@@ -175,9 +171,7 @@ export const login = async (req, res) => {
   }
 };
 
-/**
- * Refresh access token
- */
+// Refresh access token
 export const refresh = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -219,9 +213,7 @@ export const refresh = async (req, res) => {
   }
 };
 
-/**
- * Logout user
- */
+// Logout user
 export const logout = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -236,9 +228,7 @@ export const logout = async (req, res) => {
   }
 };
 
-/**
- * Forgot password - request password reset
- */
+// Forgot password - request password reset
 export const forgotPassword = async (req, res) => {
   try {
     const { email, phone } = req.body;
@@ -269,9 +259,7 @@ export const forgotPassword = async (req, res) => {
   }
 };
 
-/**
- * Reset password
- */
+// Reset password
 export const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
@@ -301,9 +289,7 @@ export const resetPassword = async (req, res) => {
   }
 };
 
-/**
- * Verify email
- */
+// Verify email
 export const verifyEmail = async (req, res) => {
   try {
     const { token } = req.body;
@@ -328,9 +314,7 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
-/**
- * Verify phone
- */
+// Verify phone
 export const verifyPhone = async (req, res) => {
   try {
     const { code } = req.body;

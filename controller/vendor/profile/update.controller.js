@@ -1,9 +1,7 @@
 import { Vendor } from '../../../models/vendor.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Update vendor profile
- */
+// Update vendor profile
 export const updateVendorProfile = async (req, res) => {
   try {
     const { businessName, businessAddress, storeName } = req.body;

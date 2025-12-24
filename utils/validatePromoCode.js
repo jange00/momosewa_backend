@@ -1,11 +1,7 @@
 import { PromoCode } from '../models/promoCode.js';
 
-/**
- * Validate and calculate discount for a promo code
- * @param {string} code - Promo code
- * @param {number} orderTotal - Order subtotal
- * @returns {Object} - { valid: boolean, discount: number, message: string, promoCode: object }
- */
+// Validate and calculate discount for a promo code
+
 export async function validatePromoCode(code, orderTotal) {
   if (!code) {
     return { valid: false, discount: 0, message: 'Promo code is required' };

@@ -1,9 +1,7 @@
 import { User } from '../../../models/user.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Change password
- */
+// Change password
 export const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;

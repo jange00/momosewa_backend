@@ -1,8 +1,6 @@
 import { Notification } from '../models/notification.js';
 
-/**
- * Create a notification for a user
- */
+// Create a notification for a user
 export async function createNotification(userId, type, title, message, data = null) {
   try {
     const notification = await Notification.create({
@@ -20,9 +18,7 @@ export async function createNotification(userId, type, title, message, data = nu
   }
 }
 
-/**
- * Create order notification
- */
+// Create order notification
 export async function createOrderNotification(userId, orderId, status) {
   const statusMessages = {
     pending: 'Your order has been placed',
@@ -41,9 +37,7 @@ export async function createOrderNotification(userId, orderId, status) {
   );
 }
 
-/**
- * Create vendor approval notification
- */
+// Create vendor approval notification
 export async function createVendorApprovalNotification(userId, status, vendorId, reason = null) {
   const messages = {
     approved: 'Your vendor application has been approved! You can now access your dashboard.',
@@ -60,9 +54,7 @@ export async function createVendorApprovalNotification(userId, status, vendorId,
   );
 }
 
-/**
- * Create payment notification
- */
+// Create payment notification
 export async function createPaymentNotification(userId, orderId, status) {
   const messages = {
     paid: 'Your payment has been processed successfully',

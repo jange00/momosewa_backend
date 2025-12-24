@@ -1,9 +1,7 @@
 import { Order } from '../../../models/order.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Get order details (admin)
- */
+// Get order details (admin)
 export const getOrderDetails = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)

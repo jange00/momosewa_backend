@@ -10,9 +10,7 @@ import { emitNewOrder } from '../../services/notificationSocket.js';
 import { getIO } from '../../services/socket.service.js';
 import { createOrderNotification } from '../../services/notification.service.js';
 
-/**
- * Create new order (Customer)
- */
+// Create new order (Customer)
 export const createOrder = async (req, res) => {
   try {
     const { items, deliveryAddress, paymentMethod, promoCode, notes } = req.body;

@@ -3,9 +3,7 @@ import { sendSuccess, sendError } from '../utils/response.js';
 import axios from 'axios';
 import { env } from '../config/env.js';
 
-/**
- * Initiate Khalti payment
- */
+// Initiate Khalti payment
 export const initiateKhaltiPayment = async (req, res) => {
   try {
     const { orderId, amount, purchase_order_id, purchase_order_name } = req.body;
@@ -59,9 +57,7 @@ export const initiateKhaltiPayment = async (req, res) => {
   }
 };
 
-/**
- * Verify Khalti payment
- */
+// Verify Khalti payment
 export const verifyKhaltiPayment = async (req, res) => {
   try {
     const { pidx } = req.body;
@@ -108,9 +104,7 @@ export const verifyKhaltiPayment = async (req, res) => {
   }
 };
 
-/**
- * Get payment transactions
- */
+// Get payment transactions
 export const getTransactions = async (req, res) => {
   try {
     const orders = await Order.find({

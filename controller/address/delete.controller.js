@@ -1,9 +1,7 @@
 import { Address } from '../../models/address.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Delete address
- */
+// Delete address
 export const deleteAddress = async (req, res) => {
   try {
     const address = await Address.findById(req.params.id);

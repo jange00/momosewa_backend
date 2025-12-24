@@ -1,9 +1,7 @@
 import { Vendor } from '../../../models/vendor.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Suspend active vendor
- */
+// Suspend active vendor
 export const suspendVendor = async (req, res) => {
   try {
     const { reason } = req.body;

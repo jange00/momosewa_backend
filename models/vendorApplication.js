@@ -94,7 +94,7 @@ vendorApplicationSchema.pre('save', async function (next) {
 
 // Index for faster queries
 vendorApplicationSchema.index({ status: 1 });
-vendorApplicationSchema.index({ userId: 1 }); // userId is unique with sparse, but explicit index for queries
+// vendorApplicationSchema.index({ userId: 1 }); // userId is unique with sparse, but explicit index for queries
 // Note: email already has index from unique: true, no need to duplicate
 
 export const VendorApplication = mongoose.model('VendorApplication', vendorApplicationSchema);

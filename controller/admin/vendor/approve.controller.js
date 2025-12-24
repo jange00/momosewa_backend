@@ -6,9 +6,7 @@ import { emitVendorApproval, emitNotificationCount } from '../../../services/not
 import { getIO } from '../../../services/socket.service.js';
 import { createVendorApprovalNotification } from '../../../services/notification.service.js';
 
-/**
- * Approve vendor application
- */
+// Approve vendor application
 export const approveVendor = async (req, res) => {
   try {
     // Find the vendor application (include password field)

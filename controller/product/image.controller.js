@@ -3,9 +3,7 @@ import { Vendor } from '../../models/vendor.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 import { uploadMultipleToCloudinary } from '../../middlewares/upload.middleware.js';
 
-/**
- * Upload product images
- */
+// Upload product images
 export const uploadProductImages = async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {

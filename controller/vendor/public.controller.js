@@ -2,9 +2,7 @@ import { Vendor } from '../../models/vendor.js';
 import { Product } from '../../models/product.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Get vendor details (public)
- */
+// Get vendor details (public)
 export const getVendorById = async (req, res) => {
   try {
     const vendor = await Vendor.findById(req.params.id)
@@ -26,9 +24,7 @@ export const getVendorById = async (req, res) => {
   }
 };
 
-/**
- * Get vendor's products (public)
- */
+// Get vendor's products (public)
 export const getVendorProducts = async (req, res) => {
   try {
     const vendor = await Vendor.findById(req.params.id);

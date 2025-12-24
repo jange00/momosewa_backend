@@ -1,9 +1,7 @@
 import { User } from '../../../models/user.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Get all users (with filters)
- */
+// Get all users (with filters)
 export const getUsers = async (req, res) => {
   try {
     const { role, search, page = 1, limit = 20 } = req.query;

@@ -5,9 +5,7 @@ import { Order } from '../../models/order.js';
 import { Product } from '../../models/product.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Get dashboard statistics
- */
+// Get dashboard statistics
 export const getDashboardStats = async (req, res) => {
   try {
     const [

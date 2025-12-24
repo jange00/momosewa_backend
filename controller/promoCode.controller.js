@@ -2,9 +2,7 @@ import { PromoCode } from '../models/promoCode.js';
 import { sendSuccess, sendError } from '../utils/response.js';
 import { validatePromoCode } from '../utils/validatePromoCode.js';
 
-/**
- * Get active promo codes (public)
- */
+// Get active promo codes (public)
 export const getPromoCodes = async (req, res) => {
   try {
     const promoCodes = await PromoCode.find({
@@ -19,9 +17,7 @@ export const getPromoCodes = async (req, res) => {
   }
 };
 
-/**
- * Create promo code (Admin only)
- */
+// Create promo code (Admin only)
 export const createPromoCode = async (req, res) => {
   try {
     const promoCode = await PromoCode.create(req.body);
@@ -38,9 +34,7 @@ export const createPromoCode = async (req, res) => {
   }
 };
 
-/**
- * Update promo code (Admin only)
- */
+// Update promo code (Admin only)
 export const updatePromoCode = async (req, res) => {
   try {
     const promoCode = await PromoCode.findByIdAndUpdate(
@@ -62,9 +56,7 @@ export const updatePromoCode = async (req, res) => {
   }
 };
 
-/**
- * Delete promo code (Admin only)
- */
+// Delete promo code (Admin only)
 export const deletePromoCode = async (req, res) => {
   try {
     const promoCode = await PromoCode.findByIdAndDelete(req.params.id);
@@ -79,9 +71,7 @@ export const deletePromoCode = async (req, res) => {
   }
 };
 
-/**
- * Validate promo code
- */
+// Validate promo code
 export const validatePromo = async (req, res) => {
   try {
     const { code, orderTotal } = req.body;

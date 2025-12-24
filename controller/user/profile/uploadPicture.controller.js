@@ -2,9 +2,7 @@ import { User } from '../../../models/user.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 import { uploadToCloudinary, deleteFromCloudinary } from '../../../middlewares/upload.middleware.js';
 
-/**
- * Upload profile picture
- */
+// Upload profile picture
 export const uploadProfilePicture = async (req, res) => {
   try {
     if (!req.file) {
@@ -28,7 +26,8 @@ export const uploadProfilePicture = async (req, res) => {
       message: 'Profile picture uploaded successfully',
     });
   } catch (error) {
-    return sendError(res, 500, 'Failed to upload profile picture', error.message);
+    console.error('Profile picture upload error:', error);
+    return sendError(res, 500, 'Failed to upload profile picture', error.message || error.details || 'Unknown error');
   }
 };
 

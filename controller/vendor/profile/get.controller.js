@@ -1,9 +1,7 @@
 import { Vendor } from '../../../models/vendor.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Get vendor profile (authenticated vendor)
- */
+// Get vendor profile (authenticated vendor)
 export const getVendorProfile = async (req, res) => {
   try {
     const vendor = await Vendor.findOne({ userId: req.user._id })

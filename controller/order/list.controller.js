@@ -2,9 +2,7 @@ import { Order } from '../../models/order.js';
 import { Vendor } from '../../models/vendor.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Get user's orders
- */
+// Get user's orders
 export const getOrders = async (req, res) => {
   try {
     const { status, page = 1, limit = 20 } = req.query;

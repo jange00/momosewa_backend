@@ -1,9 +1,7 @@
 import { VendorApplication } from '../../../models/vendorApplication.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Get pending vendor applications
- */
+// Get pending vendor applications
 export const getPendingVendors = async (req, res) => {
   try {
     // Applications now store name, email, phone directly (no need to populate userId)

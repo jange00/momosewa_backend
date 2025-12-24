@@ -1,9 +1,7 @@
 import { Product } from '../../models/product.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Get all products (with filters)
- */
+// Get all products (with filters)
 export const getProducts = async (req, res) => {
   try {
     const {

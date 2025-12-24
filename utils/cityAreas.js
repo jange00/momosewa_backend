@@ -48,7 +48,7 @@ export const CITY_AREAS = {
     'Shankhamul',
     'Thimi',
     'Imadol',
-    'Balkumari',
+    
   ],
   Bhaktapur: [
     'Durbar Square',
@@ -66,7 +66,6 @@ export const CITY_AREAS = {
     'Tathali',
     'Duwakot',
     'Gathaghar',
-    'Balkumari',
     'Lokanthali',
     'Jagati',
     'Dadhikot',
@@ -81,7 +80,6 @@ export const CITY_AREAS = {
     'Satdobato',
     'Gwarko',
     'Kupondole',
-    'Balkumari',
     'Nakhipot',
     'Imadol',
     'Harisiddhi',
@@ -93,11 +91,8 @@ export const CITY_AREAS = {
     'Sanepa',
     'Chyasal',
     'Tikabhairab',
-    'Balkumari',
     'Ekantakuna',
-    'Balkumari',
     'Dhapakhel',
-    'Balkumari',
     'Godavari',
     'Chapagaun',
     'Thecho',
@@ -105,58 +100,42 @@ export const CITY_AREAS = {
     'Karyabinayak',
     'Lamatar',
     'Lubhu',
-    'Balkumari',
     'Pyangaon',
   ],
   Kritipur: [
     'Kritipur Bazar',
     'Panga',
-    'Balkumari',
     'Chobar',
     'Kirtipur Chowk',
     'Chilancho',
     'Naga Bahal',
     'Pachali',
-    'Balkumari',
     'Bagdol',
     'Gongabu',
-    'Balkumari',
     'Macchegaun',
     'Teku',
-    'Balkumari',
     'Dakshinkali',
     'Pharping',
     'Chandragiri',
-    'Balkumari',
   ],
 };
 
-/**
- * Get areas for a specific city
- * @param {string} city - City name
- * @returns {string[]} Array of area names
- */
 export const getAreasByCity = (city) => {
   if (!city) return [];
   return CITY_AREAS[city] || [];
 };
 
-/**
- * Get all cities
- * @returns {string[]} Array of city names
- */
 export const getAllCities = () => {
   return Object.keys(CITY_AREAS);
 };
 
-/**
- * Check if area exists in city
- * @param {string} city - City name
- * @param {string} area - Area name
- * @returns {boolean}
- */
 export const isValidAreaForCity = (city, area) => {
   const areas = getAreasByCity(city);
   return areas.some(a => a.toLowerCase() === area.toLowerCase());
 };
+
+
+
+
+
 

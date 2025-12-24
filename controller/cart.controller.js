@@ -4,9 +4,7 @@ import { validatePromoCode } from '../utils/validatePromoCode.js';
 // In-memory cart storage (in production, use Redis or database)
 const carts = new Map();
 
-/**
- * Get user's cart
- */
+// Get user's cart
 export const getCart = async (req, res) => {
   try {
     const cart = carts.get(req.user._id.toString()) || { items: [], promoCode: null };
@@ -16,9 +14,7 @@ export const getCart = async (req, res) => {
   }
 };
 
-/**
- * Add item to cart
- */
+// Add item to cart
 export const addToCart = async (req, res) => {
   try {
     const { productId, variant, quantity = 1 } = req.body;
@@ -52,9 +48,7 @@ export const addToCart = async (req, res) => {
   }
 };
 
-/**
- * Update cart item quantity
- */
+// Update cart item quantity
 export const updateCartItem = async (req, res) => {
   try {
     const { quantity } = req.body;
@@ -89,9 +83,7 @@ export const updateCartItem = async (req, res) => {
   }
 };
 
-/**
- * Remove item from cart
- */
+// Remove item from cart
 export const removeFromCart = async (req, res) => {
   try {
     const { itemId } = req.params;
@@ -114,9 +106,7 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
-/**
- * Clear cart
- */
+// Clear cart
 export const clearCart = async (req, res) => {
   try {
     const userId = req.user._id.toString();
@@ -128,9 +118,7 @@ export const clearCart = async (req, res) => {
   }
 };
 
-/**
- * Apply promo code to cart
- */
+// Apply promo code to cart
 export const applyPromoCode = async (req, res) => {
   try {
     const { promoCode } = req.body;

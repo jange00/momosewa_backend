@@ -1,9 +1,7 @@
 import { Address } from '../../models/address.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Set as default address
- */
+// Set as default address
 export const setDefaultAddress = async (req, res) => {
   try {
     const address = await Address.findById(req.params.id);

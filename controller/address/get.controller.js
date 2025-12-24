@@ -1,11 +1,11 @@
 import { Address } from '../../models/address.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Get user's saved addresses
- * Query params:
- * - city (optional): Filter by city (Kathmandu, Bhaktapur, Lalitpur, Kritipur)
- */
+
+// Get user's saved addresses 
+ // Query params:
+// city (optional): Filter by city (Kathmandu, Bhaktapur, Lalitpur, Kritipur)
+ 
 export const getAddresses = async (req, res) => {
   try {
     const { city } = req.query;

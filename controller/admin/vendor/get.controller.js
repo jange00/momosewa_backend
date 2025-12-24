@@ -1,9 +1,7 @@
 import { Vendor } from '../../../models/vendor.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-/**
- * Get all vendors (with filters)
- */
+// Get all vendors (with filters)
 export const getVendors = async (req, res) => {
   try {
     const { status, search, page = 1, limit = 20 } = req.query;

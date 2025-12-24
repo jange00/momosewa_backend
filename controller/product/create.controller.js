@@ -2,9 +2,7 @@ import { Product } from '../../models/product.js';
 import { Vendor } from '../../models/vendor.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Create product (Vendor only)
- */
+// Create product (Vendor only)
 export const createProduct = async (req, res) => {
   try {
     const vendor = await Vendor.findOne({ userId: req.user._id });

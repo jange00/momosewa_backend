@@ -24,13 +24,20 @@ const updateProfileValidation = [
 router.put('/profile', updateProfileValidation, validate, updateProfile);
 router.patch('/profile', updateProfileValidation, validate, updateProfile);
 
-// Change password - support both PUT and PATCH
+// Change password - support multiple routes and methods
 const changePasswordValidation = [
   body('currentPassword').notEmpty().withMessage('Current password is required'),
   body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters'),
 ];
+// Original routes
 router.put('/password', changePasswordValidation, validate, changePassword);
 router.patch('/password', changePasswordValidation, validate, changePassword);
+// Alternative routes for frontend compatibility
+router.post('/password', changePasswordValidation, validate, changePassword);
+router.put('/profile/change-password', changePasswordValidation, validate, changePassword);
+router.patch('/profile/change-password', changePasswordValidation, validate, changePassword);
+router.post('/profile/change-password', changePasswordValidation, validate, changePassword);
+router.post('/change-password', changePasswordValidation, validate, changePassword);
 
 // Profile picture routes - support both POST and PATCH
 router.post('/profile-picture', upload.single('image'), uploadProfilePicture);

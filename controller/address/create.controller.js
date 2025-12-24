@@ -1,9 +1,7 @@
 import { Address } from '../../models/address.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-/**
- * Add new address
- */
+// Add new address
 export const addAddress = async (req, res) => {
   try {
     const addressData = {
