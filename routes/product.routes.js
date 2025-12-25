@@ -21,6 +21,7 @@ router.post(
   '/',
   authenticate,
   vendorActive,
+  upload.single('image'),
   [
     body('name').trim().notEmpty().withMessage('Product name is required'),
     body('price').isFloat({ min: 0 }).withMessage('Valid price is required'),
