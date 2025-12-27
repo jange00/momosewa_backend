@@ -16,8 +16,13 @@ export const uploadProfilePicture = async (req, res) => {
       await deleteFromCloudinary(user.profilePicture);
     }
 
+    // Determine folder based on user role
+    const folder = user.role === 'Vendor' 
+      ? 'momosewa/vendor-profiles' 
+      : 'momosewa/customer-profiles';
+
     // Upload new picture
-    const imageUrl = await uploadToCloudinary(req.file);
+    const imageUrl = await uploadToCloudinary(req.file, folder);
     user.profilePicture = imageUrl;
     await user.save();
 

@@ -31,10 +31,10 @@ export const createReview = async (req, res) => {
       return sendError(res, 400, 'Review already exists for this order');
     }
 
-    // Upload images if provided
+    // Upload images if provided - store in reviews folder
     let images = [];
     if (req.files && req.files.length > 0) {
-      images = await uploadMultipleToCloudinary(req.files);
+      images = await uploadMultipleToCloudinary(req.files, 'momosewa/reviews');
     }
 
     const review = await Review.create({

@@ -21,9 +21,9 @@ export const createProduct = async (req, res) => {
       vendorId: vendor._id,
     };
 
-    // Handle image upload (same logic as profile picture)
+    // Handle image upload - store in products folder
     if (req.file) {
-      const imageUrl = await uploadToCloudinary(req.file);
+      const imageUrl = await uploadToCloudinary(req.file, 'momosewa/products');
       productData.image = imageUrl;
       productData.images = [imageUrl]; // Also add to images array
     }
