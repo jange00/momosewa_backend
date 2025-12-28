@@ -12,15 +12,27 @@ const router = express.Router();
 // Vendor-specific routes (require authentication)
 router.get('/pending-approval', authenticate, getApprovalStatus);
 router.get('/profile', authenticate, vendorOwner, getVendorProfile);
+
+const updateVendorProfileValidation = [
+  body('businessName').optional().trim().notEmpty(),
+  body('businessAddress').optional().trim().notEmpty(),
+  body('storeName').optional().trim().notEmpty(),
+];
+
+// Support both PUT and PATCH for vendor profile update
 router.put(
   '/profile',
   authenticate,
   vendorOwner,
-  [
-    body('businessName').optional().trim().notEmpty(),
-    body('businessAddress').optional().trim().notEmpty(),
-    body('storeName').optional().trim().notEmpty(),
-  ],
+  updateVendorProfileValidation,
+  validate,
+  updateVendorProfile
+);
+router.patch(
+  '/profile',
+  authenticate,
+  vendorOwner,
+  updateVendorProfileValidation,
   validate,
   updateVendorProfile
 );
