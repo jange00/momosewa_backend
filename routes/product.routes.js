@@ -5,15 +5,18 @@ import { createProduct } from '../controller/product/create.controller.js';
 import { updateProduct } from '../controller/product/update.controller.js';
 import { deleteProduct } from '../controller/product/delete.controller.js';
 import { uploadProductImages } from '../controller/product/image.controller.js';
+import { getSubcategoriesByCategory } from '../controller/product/getSubcategories.controller.js';
 import { authenticate, vendorActive } from '../middlewares/auth.middleware.js';
 import { upload } from '../middlewares/upload.middleware.js';
 import { body } from 'express-validator';
 import { validate } from '../middlewares/validate.js';
+import { validateSubcategory, validateSubcategoryForUpdate } from '../middlewares/productSubcategoryValidator.js';
 
 const router = express.Router();
 
 // Public routes
 router.get('/', getProducts);
+router.get('/subcategories/:category', getSubcategoriesByCategory);
 router.get('/:id', getProductById);
 
 // Vendor routes
@@ -26,6 +29,7 @@ router.post(
     body('name').trim().notEmpty().withMessage('Product name is required'),
     body('price').isFloat({ min: 0 }).withMessage('Valid price is required'),
     body('category').isIn(['Steamed', 'Fried', 'Special', 'Combo']).withMessage('Valid category is required'),
+    validateSubcategory(),
   ],
   validate,
   createProduct
@@ -39,6 +43,7 @@ router.put(
     body('name').optional().trim().notEmpty(),
     body('price').optional().isFloat({ min: 0 }),
     body('category').optional().isIn(['Steamed', 'Fried', 'Special', 'Combo']),
+    validateSubcategoryForUpdate(),
   ],
   validate,
   updateProduct
