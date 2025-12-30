@@ -81,3 +81,4 @@ export const getAllSubcategories = () => {
   });
   return [...new Set(allSubcategories)]; // Remove duplicates
 };
+

@@ -28,3 +28,4 @@ export const getSubcategoriesByCategory = async (req, res) => {
     return sendError(res, 500, 'Failed to fetch subcategories', error.message);
   }
 };
+
