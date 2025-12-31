@@ -24,3 +24,4 @@ export const getDeliveryFeeSettings = async (req, res) => {
     return sendError(res, 500, 'Failed to fetch delivery fee settings', error.message);
   }
 };
+
