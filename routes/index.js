@@ -12,6 +12,7 @@ import adminRoutes from './admin.routes.js';
 import paymentRoutes from './payment.routes.js';
 import promoCodeRoutes from './promoCode.routes.js';
 import contactRoutes from './contact.routes.js';
+import deliveryFeeRoutes from './deliveryFee.routes.js';
 
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router.use('/v1/admin', adminRoutes);
 router.use('/v1/payments', paymentRoutes);
 router.use('/v1/promo-codes', promoCodeRoutes);
 router.use('/v1/contact', contactRoutes);
+router.use('/v1/delivery-fee', deliveryFeeRoutes);
 
 export default router;

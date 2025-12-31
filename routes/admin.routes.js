@@ -12,6 +12,8 @@ import { updateUser } from '../controller/admin/user/update.controller.js';
 import { deleteUser } from '../controller/admin/user/delete.controller.js';
 import { getAllOrders } from '../controller/admin/order/get.controller.js';
 import { getOrderDetails } from '../controller/admin/order/getById.controller.js';
+import { getDeliveryFeeSettings } from '../controller/admin/deliveryFee/get.controller.js';
+import { updateDeliveryFeeSettings } from '../controller/admin/deliveryFee/update.controller.js';
 import { adminOnly } from '../middlewares/auth.middleware.js';
 import { body } from 'express-validator';
 import { validate } from '../middlewares/validate.js';
@@ -56,5 +58,17 @@ router.delete('/users/:id', deleteUser);
 // Order management
 router.get('/orders', getAllOrders);
 router.get('/orders/:id', getOrderDetails);
+
+// Delivery fee settings
+router.get('/delivery-fee-settings', getDeliveryFeeSettings);
+router.put(
+  '/delivery-fee-settings',
+  [
+    body('freeDeliveryThreshold').optional().isFloat({ min: 0 }).withMessage('Free delivery threshold must be a positive number'),
+    body('deliveryFee').optional().isFloat({ min: 0 }).withMessage('Delivery fee must be a positive number'),
+  ],
+  validate,
+  updateDeliveryFeeSettings
+);
 
 export default router;

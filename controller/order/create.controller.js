@@ -65,7 +65,7 @@ export const createOrder = async (req, res) => {
     }
 
     // Calculate delivery fee
-    const deliveryFee = calculateDeliveryFee(subtotal - discount);
+    const deliveryFee = await calculateDeliveryFee(subtotal - discount);
 
     // Calculate total
     const total = subtotal - discount + deliveryFee;
