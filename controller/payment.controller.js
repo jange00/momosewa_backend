@@ -1,4 +1,5 @@
 import { Order } from '../models/order.js';
+import { Vendor } from '../models/vendor.js';
 import { sendSuccess, sendError } from '../utils/response.js';
 import axios from 'axios';
 import { env } from '../config/env.js';
@@ -9,6 +10,10 @@ import {
   verifyEsewaSignature,
   verifyPaymentWithEsewa,
 } from '../utils/esewa.js';
+import {
+  createCustomerPaymentNotification,
+  createVendorPaymentNotification,
+} from '../services/notification.service.js';
 
 // Initiate Khalti payment
 export const initiateKhaltiPayment = async (req, res) => {
@@ -99,7 +104,32 @@ export const verifyKhaltiPayment = async (req, res) => {
     }
 
     order.paymentStatus = 'paid';
+    order.paymentDate = new Date();
     await order.save();
+
+    // Create payment notifications for customer and vendor
+    try {
+      // Notify customer
+      await createCustomerPaymentNotification(
+        order.customerId,
+        order._id,
+        'paid',
+        order.total
+      );
+
+      // Notify vendor
+      const vendor = await Vendor.findById(order.vendorId);
+      if (vendor) {
+        await createVendorPaymentNotification(
+          vendor.userId,
+          order._id,
+          'paid',
+          order.total
+        );
+      }
+    } catch (error) {
+      console.error('Error creating payment notifications:', error);
+    }
 
     return sendSuccess(res, {
       data: { order, payment: paymentData },
@@ -230,6 +260,18 @@ export const esewaWebhook = async (req, res) => {
       order.paymentStatus = 'failed';
       order.esewaResponse = { error: 'Invalid signature', ...req.body };
       await order.save();
+
+      // Notify about payment failure
+      try {
+        await createCustomerPaymentNotification(order.customerId, order._id, 'failed', order.total);
+        const vendor = await Vendor.findById(order.vendorId);
+        if (vendor) {
+          await createVendorPaymentNotification(vendor.userId, order._id, 'failed', order.total);
+        }
+      } catch (error) {
+        console.error('Error creating payment failure notifications:', error);
+      }
+
       return sendError(res, 400, 'Invalid signature');
     }
 
@@ -239,6 +281,18 @@ export const esewaWebhook = async (req, res) => {
       order.paymentStatus = 'failed';
       order.esewaResponse = { error: 'Amount mismatch', ...req.body };
       await order.save();
+
+      // Notify about payment failure
+      try {
+        await createCustomerPaymentNotification(order.customerId, order._id, 'failed', order.total);
+        const vendor = await Vendor.findById(order.vendorId);
+        if (vendor) {
+          await createVendorPaymentNotification(vendor.userId, order._id, 'failed', order.total);
+        }
+      } catch (error) {
+        console.error('Error creating payment failure notifications:', error);
+      }
+
       return sendError(res, 400, 'Amount mismatch');
     }
 
@@ -250,6 +304,18 @@ export const esewaWebhook = async (req, res) => {
       order.paymentStatus = 'failed';
       order.esewaResponse = { error: 'Verification failed', verification, ...req.body };
       await order.save();
+
+      // Notify customer and vendor about payment failure
+      try {
+        await createCustomerPaymentNotification(order.customerId, order._id, 'failed', order.total);
+        const vendor = await Vendor.findById(order.vendorId);
+        if (vendor) {
+          await createVendorPaymentNotification(vendor.userId, order._id, 'failed', order.total);
+        }
+      } catch (error) {
+        console.error('Error creating payment failure notifications:', error);
+      }
+
       return sendError(res, 400, 'Payment verification failed');
     }
 
@@ -268,6 +334,30 @@ export const esewaWebhook = async (req, res) => {
     order.esewaResponse = { ...req.body, verified: true };
     order.status = 'preparing'; // Move order to next status
     await order.save();
+
+    // Create payment notifications for customer and vendor
+    try {
+      // Notify customer
+      await createCustomerPaymentNotification(
+        order.customerId,
+        order._id,
+        'paid',
+        order.total
+      );
+
+      // Notify vendor
+      const vendor = await Vendor.findById(order.vendorId);
+      if (vendor) {
+        await createVendorPaymentNotification(
+          vendor.userId,
+          order._id,
+          'paid',
+          order.total
+        );
+      }
+    } catch (error) {
+      console.error('Error creating payment notifications:', error);
+    }
 
     // TODO: Emit socket event for real-time update
     // TODO: Send notification to customer

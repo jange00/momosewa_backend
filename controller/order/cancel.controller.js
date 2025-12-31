@@ -1,5 +1,11 @@
 import { Order } from '../../models/order.js';
+import { Vendor } from '../../models/vendor.js';
+import { User } from '../../models/user.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
+import {
+  createCustomerOrderNotification,
+  createVendorOrderCancellationNotification,
+} from '../../services/notification.service.js';
 
 // Cancel order
 export const cancelOrder = async (req, res) => {
@@ -31,6 +37,33 @@ export const cancelOrder = async (req, res) => {
     }
 
     await order.save();
+
+    // Create notifications for cancellation
+    try {
+      // Notify customer
+      await createCustomerOrderNotification(
+        order.customerId,
+        order._id,
+        'cancelled',
+        { orderId: order.orderId, reason: reason || null }
+      );
+
+      // Notify vendor if customer cancelled
+      if (req.user.role === 'Customer') {
+        const vendor = await Vendor.findById(order.vendorId);
+        if (vendor) {
+          const customer = await User.findById(order.customerId);
+          await createVendorOrderCancellationNotification(
+            vendor.userId,
+            order._id,
+            customer?.name || 'Customer',
+            reason || null
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error creating cancellation notifications:', error);
+    }
 
     return sendSuccess(res, {
       data: { order },

@@ -2,6 +2,7 @@ import { Product } from '../../models/product.js';
 import { Vendor } from '../../models/vendor.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 import { isValidSubcategory } from '../../utils/productSubcategories.js';
+import { createVendorInventoryAlert } from '../../services/notification.service.js';
 
 // Update product (Vendor owner only)
 export const updateProduct = async (req, res) => {
@@ -41,8 +42,30 @@ export const updateProduct = async (req, res) => {
       }
     }
 
+    const oldStock = product.stock;
     Object.assign(product, req.body);
     await product.save();
+
+    // Check for inventory alerts if stock was updated
+    if (req.body.stock !== undefined && product.stock !== -1) {
+      const stockThreshold = 5; // Alert when stock is 5 or less
+      if (product.stock === 0 || (product.stock <= stockThreshold && (oldStock === undefined || oldStock > stockThreshold))) {
+        try {
+          const vendor = await Vendor.findById(product.vendorId);
+          if (vendor) {
+            await createVendorInventoryAlert(
+              vendor.userId,
+              product._id,
+              product.name,
+              product.stock,
+              stockThreshold
+            );
+          }
+        } catch (error) {
+          console.error('Error creating inventory alert:', error);
+        }
+      }
+    }
 
     return sendSuccess(res, {
       data: { product },

@@ -9,8 +9,13 @@ const notificationSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['order', 'vendor_approval', 'payment', 'system'],
+      enum: ['order', 'vendor_approval', 'payment', 'system', 'review', 'inventory'],
       required: [true, 'Notification type is required'],
+    },
+    recipientRole: {
+      type: String,
+      enum: ['Customer', 'Vendor', 'Admin'],
+      default: null,
     },
     title: {
       type: String,
