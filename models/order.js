@@ -118,16 +118,32 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ['khalti', 'cash-on-delivery'],
+      enum: ['khalti', 'esewa', 'cash-on-delivery'],
       required: [true, 'Payment method is required'],
     },
     paymentStatus: {
       type: String,
-      enum: ['pending', 'paid', 'failed', 'refunded'],
+      enum: ['pending', 'processing', 'paid', 'failed', 'refunded'],
       default: 'pending',
     },
     khaltiTransactionId: {
       type: String,
+      default: null,
+    },
+    esewaTransactionId: {
+      type: String,
+      default: null,
+    },
+    esewaRefId: {
+      type: String,
+      default: null,
+    },
+    esewaResponse: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
+    paymentDate: {
+      type: Date,
       default: null,
     },
     deliveryAddress: {
