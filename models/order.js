@@ -118,7 +118,7 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ['khalti', 'cash-on-delivery'],
+      enum: ['khalti', 'cash-on-delivery', 'esewa'],
       required: [true, 'Payment method is required'],
     },
     paymentStatus: {
@@ -127,6 +127,10 @@ const orderSchema = new mongoose.Schema(
       default: 'pending',
     },
     khaltiTransactionId: {
+      type: String,
+      default: null,
+    },
+    esewaTransactionId: {
       type: String,
       default: null,
     },
