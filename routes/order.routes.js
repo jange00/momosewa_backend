@@ -19,7 +19,7 @@ router.post(
   [
     body('items').isArray({ min: 1 }).withMessage('Order must have at least one item'),
     body('deliveryAddress').isObject().withMessage('Delivery address is required'),
-    body('paymentMethod').isIn(['khalti', 'cash-on-delivery']).withMessage('Valid payment method is required'),
+    body('paymentMethod').isIn(['khalti', 'cash-on-delivery', 'esewa']).withMessage('Valid payment method is required'),
     body('promoCode').optional().trim(),
   ],
   validate,
