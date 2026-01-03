@@ -1,11 +1,12 @@
 import { Vendor } from '../../models/vendor.js';
-import { VendorApplication } from '../../models/vendorApplication.js';
 import { User } from '../../models/user.js';
 import { Order } from '../../models/order.js';
 import { Product } from '../../models/product.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 
-// Get dashboard statistics
+/**
+ * Get dashboard statistics
+ */
 export const getDashboardStats = async (req, res) => {
   try {
     const [
@@ -20,7 +21,7 @@ export const getDashboardStats = async (req, res) => {
       User.countDocuments(),
       Vendor.countDocuments(),
       Vendor.countDocuments({ status: 'active' }),
-      VendorApplication.countDocuments({ status: 'pending' }), // Fixed: Count from VendorApplication, not Vendor
+      Vendor.countDocuments({ status: 'pending' }),
       Order.countDocuments(),
       Order.aggregate([
         { $match: { paymentStatus: 'paid' } },

@@ -16,13 +16,8 @@ export const uploadProfilePicture = async (req, res) => {
       await deleteFromCloudinary(user.profilePicture);
     }
 
-    // Determine folder based on user role
-    const folder = user.role === 'Vendor' 
-      ? 'momosewa/vendor-profiles' 
-      : 'momosewa/customer-profiles';
-
     // Upload new picture
-    const imageUrl = await uploadToCloudinary(req.file, folder);
+    const imageUrl = await uploadToCloudinary(req.file);
     user.profilePicture = imageUrl;
     await user.save();
 
@@ -31,8 +26,7 @@ export const uploadProfilePicture = async (req, res) => {
       message: 'Profile picture uploaded successfully',
     });
   } catch (error) {
-    console.error('Profile picture upload error:', error);
-    return sendError(res, 500, 'Failed to upload profile picture', error.message || error.details || 'Unknown error');
+    return sendError(res, 500, 'Failed to upload profile picture', error.message);
   }
 };
 

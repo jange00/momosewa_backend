@@ -67,10 +67,6 @@ const userSchema = new mongoose.Schema(
 // Hash password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  // Check if password is already hashed (bcrypt hashes start with $2a$, $2b$, or $2y$ followed by cost and 53 chars)
-  if (this.password && /^\$2[ayb]\$\d+\$[./A-Za-z0-9]{53}$/.test(this.password)) {
-    return next(); // Password is already hashed, skip hashing
-  }
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });

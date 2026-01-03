@@ -2,7 +2,9 @@ import { Vendor } from '../../../models/vendor.js';
 import { VendorApplication } from '../../../models/vendorApplication.js';
 import { sendSuccess, sendError } from '../../../utils/response.js';
 
-// Get vendor details (can be application or approved vendor)
+/**
+ * Get vendor details (can be application or approved vendor)
+ */
 export const getVendorDetails = async (req, res) => {
   try {
     // First try to find as approved vendor
@@ -16,8 +18,7 @@ export const getVendorDetails = async (req, res) => {
 
     // If not found, try as application
     const application = await VendorApplication.findById(req.params.id)
-      .select('-password') // Don't send password
-      .populate('userId', 'name email phone profilePicture') // userId may be null for pending apps
+      .populate('userId', 'name email phone profilePicture')
       .populate('reviewedBy', 'name email');
 
     if (!application) {

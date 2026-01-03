@@ -1,41 +1,12 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
 
 const vendorApplicationSchema = new mongoose.Schema(
   {
-    // userId is optional - only set after user account is created (after approval)
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: false,
+      required: [true, 'User ID is required'],
       unique: true,
-      sparse: true, // Allows multiple null values
-    },
-    // User information stored during registration (before approval)
-    name: {
-      type: String,
-      required: [true, 'Name is required'],
-      trim: true,
-    },
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      unique: true,
-      lowercase: true,
-      trim: true,
-      match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email'],
-    },
-    phone: {
-      type: String,
-      required: [true, 'Phone is required'],
-      unique: true,
-      trim: true,
-    },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      minlength: [6, 'Password must be at least 6 characters'],
-      select: false,
     },
     businessName: {
       type: String,
@@ -85,16 +56,8 @@ const vendorApplicationSchema = new mongoose.Schema(
   }
 );
 
-// Hash password before saving
-vendorApplicationSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
-
 // Index for faster queries
 vendorApplicationSchema.index({ status: 1 });
-// vendorApplicationSchema.index({ userId: 1 }); // userId is unique with sparse, but explicit index for queries
-// Note: email already has index from unique: true, no need to duplicate
+vendorApplicationSchema.index({ userId: 1 });
 
 export const VendorApplication = mongoose.model('VendorApplication', vendorApplicationSchema);

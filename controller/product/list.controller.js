@@ -6,7 +6,6 @@ export const getProducts = async (req, res) => {
   try {
     const {
       category,
-      subcategory,
       minPrice,
       maxPrice,
       minRating,
@@ -19,7 +18,6 @@ export const getProducts = async (req, res) => {
     const query = { isAvailable: true };
 
     if (category) query.category = category;
-    if (subcategory) query.subcategory = subcategory;
     if (vendor) query.vendorId = vendor;
     if (minPrice || maxPrice) {
       query.price = {};

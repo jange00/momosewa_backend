@@ -2,10 +2,8 @@ import { Review } from '../models/review.js';
 import { Order } from '../models/order.js';
 import { Product } from '../models/product.js';
 import { Vendor } from '../models/vendor.js';
-import { User } from '../models/user.js';
 import { sendSuccess, sendError } from '../utils/response.js';
 import { uploadMultipleToCloudinary } from '../middlewares/upload.middleware.js';
-import { createVendorReviewNotification } from '../services/notification.service.js';
 
 // Create review (Customer, after order delivered)
 export const createReview = async (req, res) => {
@@ -33,10 +31,10 @@ export const createReview = async (req, res) => {
       return sendError(res, 400, 'Review already exists for this order');
     }
 
-    // Upload images if provided - store in reviews folder
+    // Upload images if provided
     let images = [];
     if (req.files && req.files.length > 0) {
-      images = await uploadMultipleToCloudinary(req.files, 'momosewa/reviews');
+      images = await uploadMultipleToCloudinary(req.files);
     }
 
     const review = await Review.create({
@@ -50,34 +48,12 @@ export const createReview = async (req, res) => {
     });
 
     // Update product rating if productId provided
-    let productName = null;
     if (productId) {
       await updateProductRating(productId);
-      const product = await Product.findById(productId);
-      productName = product?.name || null;
     }
 
     // Update vendor rating
     await updateVendorRating(order.vendorId);
-
-    // Notify vendor about new review
-    try {
-      const vendor = await Vendor.findById(order.vendorId);
-      if (vendor) {
-        const customer = await User.findById(req.user._id);
-        const reviewProductName = productName || 'your products';
-        await createVendorReviewNotification(
-          vendor.userId,
-          review._id,
-          reviewProductName,
-          customer?.name || 'Customer',
-          rating,
-          comment || null
-        );
-      }
-    } catch (error) {
-      console.error('Error creating vendor review notification:', error);
-    }
 
     return sendSuccess(res, {
       data: { review },

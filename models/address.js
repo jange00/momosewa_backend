@@ -22,23 +22,19 @@ const addressSchema = new mongoose.Schema(
       required: [true, 'Phone is required'],
       trim: true,
     },
+    address: {
+      type: String,
+      required: [true, 'Address is required'],
+      trim: true,
+    },
     city: {
       type: String,
       required: [true, 'City is required'],
       trim: true,
-      enum: {
-        values: ['Kathmandu', 'Bhaktapur', 'Lalitpur', 'Kritipur'],
-        message: 'City must be one of: Kathmandu, Bhaktapur, Lalitpur, Kritipur',
-      },
     },
     area: {
       type: String,
       required: [true, 'Area is required'],
-      trim: true,
-    },
-    nearestLandmark: {
-      type: String,
-      required: [true, 'Nearest landmark is required'],
       trim: true,
     },
     postalCode: {
@@ -67,8 +63,7 @@ const addressSchema = new mongoose.Schema(
 );
 
 // Index for faster queries
-// Composite index can handle both userId-only and userId+city queries efficiently
-addressSchema.index({ userId: 1, city: 1 }); // Composite index for city filtering (can also be used for userId queries)
+addressSchema.index({ userId: 1 });
 
 // Ensure only one default address per user
 addressSchema.pre('save', async function (next) {

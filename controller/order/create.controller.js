@@ -8,11 +8,7 @@ import { validatePromoCode } from '../../utils/validatePromoCode.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 import { emitNewOrder } from '../../services/notificationSocket.js';
 import { getIO } from '../../services/socket.service.js';
-import {
-  createCustomerOrderNotification,
-  createVendorNewOrderNotification,
-  createVendorInventoryAlert,
-} from '../../services/notification.service.js';
+import { createOrderNotification } from '../../services/notification.service.js';
 
 // Create new order (Customer)
 export const createOrder = async (req, res) => {
@@ -56,13 +52,6 @@ export const createOrder = async (req, res) => {
         quantity: item.quantity,
         emoji: product.emoji,
       });
-
-      // Track products for stock update and inventory alerts
-      if (product.stock !== -1) {
-        const oldStock = product.stock;
-        product.stock -= item.quantity;
-        productsToUpdate.push({ product, oldStock });
-      }
     }
 
     // Validate promo code
@@ -76,7 +65,7 @@ export const createOrder = async (req, res) => {
     }
 
     // Calculate delivery fee
-    const deliveryFee = await calculateDeliveryFee(subtotal - discount);
+    const deliveryFee = calculateDeliveryFee(subtotal - discount);
 
     // Calculate total
     const total = subtotal - discount + deliveryFee;
@@ -106,54 +95,14 @@ export const createOrder = async (req, res) => {
       notes: notes || null,
     });
 
-    // Save product stock updates and create inventory alerts
-    try {
-      for (const { product, oldStock } of productsToUpdate) {
-        await product.save();
-        
-        // Check for low stock alerts (threshold: 5)
-        // Only alert if stock just dropped below threshold (was above 5, now 5 or less)
-        if (oldStock > 5 && product.stock <= 5) {
-          await createVendorInventoryAlert(
-            vendor.userId,
-            product._id,
-            product.name,
-            product.stock,
-            5
-          );
-        }
-        // Alert if product is out of stock
-        if (oldStock > 0 && product.stock === 0) {
-          await createVendorInventoryAlert(
-            vendor.userId,
-            product._id,
-            product.name,
-            0,
-            5
-          );
-        }
-      }
-    } catch (error) {
-      console.error('Error updating product stock and creating inventory alerts:', error);
-    }
-
-    // Create notifications for vendor and customer
+    // Emit notification to vendor
     try {
       const io = getIO();
-      
-      // Notify vendor about new order
       const vendorUser = await User.findById(vendor.userId);
       if (vendorUser) {
         emitNewOrder(io, vendor.userId.toString(), { orderId: order._id, order });
-        await createVendorNewOrderNotification(vendor.userId, order._id, order);
+        await createOrderNotification(vendor.userId, order._id, 'pending');
       }
-
-      // Notify customer that order was placed
-      await createCustomerOrderNotification(req.user._id, order._id, 'pending', {
-        orderId: order.orderId,
-        total: order.total,
-        itemsCount: order.items.length,
-      });
     } catch (error) {
       console.error('Error emitting order notification:', error);
     }

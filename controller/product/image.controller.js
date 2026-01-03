@@ -26,7 +26,7 @@ export const uploadProductImages = async (req, res) => {
       return sendError(res, 403, 'You do not have permission to update this product');
     }
 
-    const imageUrls = await uploadMultipleToCloudinary(req.files, 'momosewa/products');
+    const imageUrls = await uploadMultipleToCloudinary(req.files);
 
     if (product.images.length === 0 && imageUrls.length > 0) {
       product.image = imageUrls[0];

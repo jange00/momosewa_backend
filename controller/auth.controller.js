@@ -4,63 +4,14 @@ import { sendSuccess, sendError } from '../utils/response.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
 import { emitNotification } from '../services/notificationSocket.js';
 
-// Register new user
+/**
+ * Register new user
+ */
 export const register = async (req, res) => {
   try {
     const { name, email, phone, password, role = 'Customer' } = req.body;
 
-    // If vendor registration, only create VendorApplication (NO User account yet)
-    if (role === 'Vendor') {
-      const { businessName, businessAddress, businessLicense, storeName } = req.body;
-
-      if (!businessName || !businessAddress || !businessLicense || !storeName) {
-        return sendError(res, 400, 'Vendor registration requires business details');
-      }
-
-      // Check if user or application already exists
-      const existingUser = await User.findOne({
-        $or: [{ email: email.toLowerCase() }, { phone }],
-      });
-
-      if (existingUser) {
-        return sendError(res, 400, 'User with this email or phone already exists');
-      }
-
-      // Check if application already exists
-      const existingApplication = await VendorApplication.findOne({
-        $or: [{ email: email.toLowerCase() }, { phone }],
-      });
-
-      if (existingApplication) {
-        return sendError(res, 400, 'Vendor application with this email or phone already exists');
-      }
-
-      // Create vendor application only (NO User account created until admin approval)
-      const application = await VendorApplication.create({
-        name,
-        email: email.toLowerCase(),
-        phone,
-        password, // Will be hashed by pre-save hook
-        businessName,
-        businessAddress,
-        businessLicense,
-        storeName,
-        status: 'pending',
-      });
-
-      return sendSuccess(res, {
-        data: {
-          application: {
-            _id: application._id,
-            email: application.email,
-            status: application.status,
-          },
-        },
-        message: 'Vendor application submitted successfully. Please wait for admin approval before you can login.',
-      });
-    }
-
-    // For non-vendor registration, create user account immediately
+    // Check if user already exists
     const existingUser = await User.findOne({
       $or: [{ email: email.toLowerCase() }, { phone }],
     });
@@ -69,23 +20,38 @@ export const register = async (req, res) => {
       return sendError(res, 400, 'User with this email or phone already exists');
     }
 
-    // Check if there's a pending vendor application with this email/phone
-    const existingApplication = await VendorApplication.findOne({
-      $or: [{ email: email.toLowerCase() }, { phone }],
-    });
-
-    if (existingApplication) {
-      return sendError(res, 400, 'An application with this email or phone already exists');
-    }
-
+    // If vendor registration, create user as Customer first (role changes to Vendor after approval)
+    const userRole = role === 'Vendor' ? 'Customer' : role;
+    
     // Create user
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       phone,
       password,
-      role,
+      role: userRole,
     });
+
+    // If vendor, create vendor application (NOT vendor document yet)
+    if (role === 'Vendor') {
+      const { businessName, businessAddress, businessLicense, storeName } = req.body;
+
+      if (!businessName || !businessAddress || !businessLicense || !storeName) {
+        // Delete user if vendor registration is incomplete
+        await User.findByIdAndDelete(user._id);
+        return sendError(res, 400, 'Vendor registration requires business details');
+      }
+
+      // Store application data temporarily - Vendor document will be created only after admin approval
+      await VendorApplication.create({
+        userId: user._id,
+        businessName,
+        businessAddress,
+        businessLicense,
+        storeName,
+        status: 'pending',
+      });
+    }
 
     // Generate tokens
     const tokenPayload = {
@@ -119,7 +85,9 @@ export const register = async (req, res) => {
   }
 };
 
-// Login user
+/**
+ * Login user
+ */
 export const login = async (req, res) => {
   try {
     const { email, phone, password } = req.body;
@@ -171,7 +139,9 @@ export const login = async (req, res) => {
   }
 };
 
-// Refresh access token
+/**
+ * Refresh access token
+ */
 export const refresh = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -213,7 +183,9 @@ export const refresh = async (req, res) => {
   }
 };
 
-// Logout user
+/**
+ * Logout user
+ */
 export const logout = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -228,7 +200,9 @@ export const logout = async (req, res) => {
   }
 };
 
-// Forgot password - request password reset
+/**
+ * Forgot password - request password reset
+ */
 export const forgotPassword = async (req, res) => {
   try {
     const { email, phone } = req.body;
@@ -259,7 +233,9 @@ export const forgotPassword = async (req, res) => {
   }
 };
 
-// Reset password
+/**
+ * Reset password
+ */
 export const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
@@ -289,7 +265,9 @@ export const resetPassword = async (req, res) => {
   }
 };
 
-// Verify email
+/**
+ * Verify email
+ */
 export const verifyEmail = async (req, res) => {
   try {
     const { token } = req.body;
@@ -314,7 +292,9 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
-// Verify phone
+/**
+ * Verify phone
+ */
 export const verifyPhone = async (req, res) => {
   try {
     const { code } = req.body;

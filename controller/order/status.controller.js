@@ -3,10 +3,7 @@ import { Vendor } from '../../models/vendor.js';
 import { sendSuccess, sendError } from '../../utils/response.js';
 import { emitOrderUpdate } from '../../services/notificationSocket.js';
 import { getIO } from '../../services/socket.service.js';
-import {
-  createCustomerOrderNotification,
-  createVendorOrderStatusNotification,
-} from '../../services/notification.service.js';
+import { createOrderNotification } from '../../services/notification.service.js';
 
 // Update order status (Vendor/Admin)
 export const updateOrderStatus = async (req, res) => {
@@ -42,28 +39,11 @@ export const updateOrderStatus = async (req, res) => {
 
     await order.save();
 
-    // Emit notifications to customer and vendor
+    // Emit notification
     try {
       const io = getIO();
       emitOrderUpdate(io, order._id.toString(), { status });
-
-      // Notify customer about status update
-      await createCustomerOrderNotification(
-        order.customerId,
-        order._id,
-        status,
-        { orderId: order.orderId }
-      );
-
-      // If vendor is updating status, also notify vendor (for their own records)
-      if (req.user.role === 'Vendor') {
-        await createVendorOrderStatusNotification(
-          req.user._id,
-          order._id,
-          status,
-          order
-        );
-      }
+      await createOrderNotification(order.customerId.toString(), order._id, status);
     } catch (error) {
       console.error('Error emitting order status update:', error);
     }
