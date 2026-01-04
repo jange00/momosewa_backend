@@ -27,3 +27,4 @@ export const getAreas = async (req, res) => {
 };
 
 
+
