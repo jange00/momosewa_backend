@@ -34,7 +34,13 @@ export const updateOrderStatus = async (req, res) => {
 
     if (status === 'delivered') {
       order.deliveredDate = new Date();
-      order.paymentStatus = 'paid';
+      // Only update payment status to 'paid' for cash-on-delivery when delivered
+      // For online payments (khalti/esewa), payment status is already set when payment is verified
+      if (order.paymentMethod === 'cash-on-delivery' && order.paymentStatus === 'pending') {
+        order.paymentStatus = 'paid';
+      }
+      // For online payments, payment status should already be 'paid' from payment verification
+      // Don't override it here - it should be set by the payment verification endpoint
     }
 
     await order.save();

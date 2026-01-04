@@ -44,6 +44,12 @@ const productSchema = new mongoose.Schema(
       required: [true, 'Category is required'],
       enum: ['Steamed', 'Fried', 'Special', 'Combo'],
     },
+    subcategory: {
+      type: String,
+      required: [true, 'Subcategory is required'],
+      enum: ['veg', 'chicken', 'buff', 'pork', 'mutton', 'seafood'],
+      trim: true,
+    },
     image: {
       type: String,
       default: null,
@@ -87,6 +93,7 @@ const productSchema = new mongoose.Schema(
 // Indexes for faster queries
 productSchema.index({ vendorId: 1 });
 productSchema.index({ category: 1 });
+productSchema.index({ subcategory: 1 });
 productSchema.index({ isAvailable: 1 });
 productSchema.index({ name: 'text', description: 'text' });
 

@@ -1,5 +1,6 @@
 import express from 'express';
 import { getAddresses } from '../controller/address/get.controller.js';
+import { getAreas } from '../controller/address/getAreas.controller.js';
 import { addAddress } from '../controller/address/create.controller.js';
 import { updateAddress } from '../controller/address/update.controller.js';
 import { deleteAddress } from '../controller/address/delete.controller.js';
@@ -14,6 +15,7 @@ router.use(authenticate);
 router.use(customerOnly);
 
 router.get('/', getAddresses);
+router.get('/areas/:city', getAreas);
 router.post(
   '/',
   [

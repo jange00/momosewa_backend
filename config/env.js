@@ -36,6 +36,13 @@ export const env = {
   KHALTI_SECRET_KEY: process.env.KHALTI_SECRET_KEY || '',
   KHALTI_PUBLIC_KEY: process.env.KHALTI_PUBLIC_KEY || '',
   KHALTI_WEBHOOK_SECRET: process.env.KHALTI_WEBHOOK_SECRET || '',
+  // Esewa
+  ESEWA_MERCHANT_ID: process.env.ESEWA_MERCHANT_ID || 'EPAYTEST',
+  ESEWA_SECRET_KEY: process.env.ESEWA_SECRET_KEY || '8gBm/:&EnhH.1/q',
+  ESEWA_TOKEN: process.env.ESEWA_TOKEN || '123456',
+  ESEWA_CLIENT_ID: process.env.ESEWA_CLIENT_ID || 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R',
+  ESEWA_CLIENT_SECRET: process.env.ESEWA_CLIENT_SECRET || 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==',
+  ESEWA_ENV: process.env.ESEWA_ENV || (process.env.NODE_ENV === 'development' ? 'test' : 'production'),
   // Email (Nodemailer)
   SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
   SMTP_PORT: parseInt(process.env.SMTP_PORT || '587', 10),
